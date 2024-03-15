@@ -11,29 +11,56 @@ import { Avatar, Box, Container, TextField } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useForm } from 'react-hook-form';
 import { useCreatePostMutation } from '../store/apis/postApi';
-import { Posts } from '../context/PostsContext';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CustomDialog({ openPostModal, setOpenPostModal }) {
+export default function CustomDialog({
+  openPostModal,
+  setOpenPostModal,
+  setNewPosts,
+}) {
   const { register, handleSubmit, formState } = useForm();
 
-  const imgInputBtnRef = React.useRef(null);
-  console.log(imgInputBtnRef);
+  // const { ref: registerRef, ...rest } = register('postImage');
+
+  const imgInputRef = React.useRef(null);
+
   const { errors } = formState;
   const [createPost] = useCreatePostMutation();
 
-  const { setNewPosts } = React.useContext(Posts);
+  const [previewPostImage, setPreviewPostImage] = React.useState(null);
+  const [postImage, setPostImage] = React.useState(null);
 
-  const onSubmit = (submittedData) => {
+  const handlePostImageUpload = (e) => {
+    setPostImage(e.target.files[0]);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+
+    reader.addEventListener('load', () => {
+      setPreviewPostImage(reader.result);
+    });
+    e.target.value = null;
+  };
+
+  const handleRemoveImage = () => {
+    setPreviewPostImage(null);
+    setPostImage(null);
+    imgInputRef.current.value = null;
+  };
+
+  const onSubmit = async (submittedData) => {
     const body = {
       ...submittedData,
+      image: postImage,
       isPrivate: false,
     };
-    createPost(body);
-    setNewPosts(body);
+    // console.log({ body });
+    const res = await createPost(body);
+    console.log({ res });
+    setNewPosts(res?.data?.data);
 
     setOpenPostModal(false);
   };
@@ -59,27 +86,22 @@ export default function CustomDialog({ openPostModal, setOpenPostModal }) {
                 style={{ cursor: 'pointer' }}
                 sx={{ mx: 25, width: 250, height: 100, borderRadius: 3 }}
                 alt=" Sharp"
-             
+                src={previewPostImage}
               >
-                <CloudUploadIcon    onClick={()=>imgInputBtnRef.current.onClick()} />
-            
-              </Avatar>
-              <TextField
-                  margin="normal"
-                  type='file'
-                  required
-                  fullWidth
-                  id="title"
-                  label="Title"
-                  name="title"
-                  autoComplete="title"
-                  autoFocus
-                  sx={{display:'none'}}
-                  ref={imgInputBtnRef}
-                
+                <CloudUploadIcon
+                  sx={{ fontSize: 50 }}
+                  onClick={() => imgInputRef.current.click()}
                 />
-
-            
+              </Avatar>
+              {postImage && (
+                <Button
+                  sx={{ mt: 1 }}
+                  variant="outlined"
+                  onClick={handleRemoveImage}
+                >
+                  Remove Image
+                </Button>
+              )}
 
               <Box
                 component="form"
@@ -114,6 +136,18 @@ export default function CustomDialog({ openPostModal, setOpenPostModal }) {
                   })}
                   error={!!errors.description?.message}
                   helperText={errors.description?.message}
+                />
+                <input
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  name="photoImgUpload"
+                  // {...rest}
+                  ref={(e) => {
+                    // registerRef(e);
+                    imgInputRef.current = e;
+                  }}
+                  onChange={handlePostImageUpload}
+                  style={{ display: 'none' }}
                 />
 
                 <Button

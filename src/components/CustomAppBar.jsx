@@ -100,7 +100,9 @@ export default function CustomAppBar() {
   };
 
   const handleProfile = () => {
-    setAnchorEl(false);
+    setAnchorEl(null);
+    handleMobileMenuClose();
+
     navigate('/profile');
   };
 
@@ -122,6 +124,7 @@ export default function CustomAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleProfile}>Profile</MenuItem>
+
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
@@ -143,6 +146,7 @@ export default function CustomAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => navigate('/feed')}>Home</MenuItem>
       <MenuItem onClick={handleProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
@@ -162,16 +166,34 @@ export default function CustomAppBar() {
             {/* <MenuIcon /> */}
           </IconButton>
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            // sx={{ display: { xs: 'none', sm: 'block' } }}
           >
             <Link
               style={{ textDecoration: 'none', color: 'inherit' }}
               to="/feed"
             >
               Rituals
+            </Link>
+          </Typography>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ display: { xs: 'none', sm: 'block' }, mx: 4 }}
+          >
+            <Link
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+                fontWeight: 100,
+                fontSize: 15,
+              }}
+              to="/feed"
+            >
+              Home
             </Link>
           </Typography>
 

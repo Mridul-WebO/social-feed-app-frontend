@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useFetchAllPostsQuery } from '../store/apis/postApi';
 import { enqueueSnackbar } from 'notistack';
 
@@ -8,10 +8,15 @@ export const Posts = createContext();
 const PostsContext = ({ children }) => {
   const { data } = useFetchAllPostsQuery();
 
-  const [posts, setPosts] = useState(data);
+  const [posts, setPosts] = useState();
+
+  useEffect(() => {
+    setPosts(data?.data?.data);
+  }, [data]);
 
   const setNewPosts = (post) => {
-    setPosts(post);
+    // console.log({ post });
+    setPosts([post, ...posts]);
 
     enqueueSnackbar('Post created successfully', {
       variant: 'success',

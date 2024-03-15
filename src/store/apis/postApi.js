@@ -7,25 +7,30 @@ const extendedApi = createApiInstance.injectEndpoints({
         return {
           url: '/posts/get-feed-posts',
           method: 'GET',
-          headers: {},
         };
       },
       providesTags: ['Post'],
     }),
     createPost: builder.mutation({
       query: (data) => {
+        const formData = new FormData();
+
+        for (const key in data) {
+          formData.append(key, data[key]);
+        }
+
         return {
           url: '/posts/create-post',
           method: 'POST',
-          body: data,
+          body: formData,
         };
       },
       providesTags: ['Post'],
     }),
     fetchPostImg: builder.query({
-      query: () => {
+      query: (postId) => {
         return {
-          url: '/posts/get-feed-image?postId=65eec2b46d9631ceeaf83b66',
+          url: `/posts/get-feed-image?postId=${postId}`,
           method: 'GET',
         };
       },

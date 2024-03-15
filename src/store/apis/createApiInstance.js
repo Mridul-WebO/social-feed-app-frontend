@@ -6,6 +6,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: config.baseUrl,
   prepareHeaders: (headers) => {
     const token = getSessionToken();
+    console.log({ token });
 
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
