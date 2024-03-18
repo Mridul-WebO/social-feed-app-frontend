@@ -21,7 +21,7 @@ export default function CustomDialog({
   setOpenPostModal,
   setNewPosts,
 }) {
-  const { register, handleSubmit, formState } = useForm();
+  const { register, handleSubmit, formState, reset } = useForm();
 
   // const { ref: registerRef, ...rest } = register('postImage');
 
@@ -59,10 +59,14 @@ export default function CustomDialog({
     };
     // console.log({ body });
     const res = await createPost(body);
-    console.log({ res });
+
     setNewPosts(res?.data?.data);
 
     setOpenPostModal(false);
+
+    handleRemoveImage();
+    reset();
+
   };
 
   return (

@@ -5,7 +5,7 @@ import { Auth } from './context/AuthContext';
 
 function App() {
   const { isLoggedIn } = useContext(Auth);
-  console.log('App', { isLoggedIn });
+
 
   return (
     <>

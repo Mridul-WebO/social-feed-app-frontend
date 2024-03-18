@@ -3,13 +3,14 @@ import { createApiInstance } from './createApiInstance';
 const extendedApi = createApiInstance.injectEndpoints({
   endpoints: (builder) => ({
     fetchAllPosts: builder.query({
-      query: () => {
+      query: (pageNumber) => {
         return {
-          url: '/posts/get-feed-posts',
+          url: `/posts/get-feed-posts?page=${pageNumber}`,
           method: 'GET',
         };
       },
-      providesTags: ['Post'],
+      providesTags:['Post']
+   
     }),
     createPost: builder.mutation({
       query: (data) => {
@@ -25,7 +26,7 @@ const extendedApi = createApiInstance.injectEndpoints({
           body: formData,
         };
       },
-      providesTags: ['Post'],
+   
     }),
     fetchPostImg: builder.query({
       query: (postId) => {
@@ -34,7 +35,7 @@ const extendedApi = createApiInstance.injectEndpoints({
           method: 'GET',
         };
       },
-      providesTags: ['Post'],
+  
     }),
   }),
 });
