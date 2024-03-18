@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -21,12 +22,34 @@ import {
   useFetchUserQuery,
   useUpdateUserMutation,
 } from '../../store/apis/usersApi';
+import CustomAlert from '../../components/CustomAlert';
+
+const CustomGrid = ({ Key, Value }) => {
+  return (
+    <Grid
+      container
+      spacing={0}
+      sx={{ my: 2 }}
+      style={{ border: '2px solid red' }}
+    >
+      <Grid item xs={6}>
+        <Typography>{Key}:</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>{Value}</Typography>
+      </Grid>
+    </Grid>
+  );
+};
 
 export default function ProfilePage() {
+  const [openCustomAlert, setOpenCustomAlert] = useState(false);
+
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState();
+  const [updatedData, setUpdatedData] = useState();
 
   const [updateUser] = useUpdateUserMutation();
 
@@ -46,18 +69,25 @@ export default function ProfilePage() {
   });
 
   const { errors } = formState;
+
   const onSubmit = async (submittedData) => {
     const body = {
       ...submittedData,
       isPrivate: true,
     };
-    console.log({ body });
-    const res = await updateUser(body);
-    console.log({ res });
+
+    console.log('hell');
+    setOpenCustomAlert(true);
+    setUpdatedData(body);
+  };
+
+  const onUpdateUser = async () => {
+    const res = await updateUser(updatedData);
     enqueueSnackbar('Details updated successfully', {
       variant: 'success',
       autoHideDuration: 3000,
     });
+    setOpenCustomAlert(false);
   };
 
   return (
@@ -77,6 +107,10 @@ export default function ProfilePage() {
         <Typography component="h1" variant="h5">
           Profile
         </Typography>
+        <CustomGrid Key={'First Name'} Value={userData?.firstname} />
+        <CustomGrid Key={'Last Name'} Value={userData?.lastname} />
+        <CustomGrid Key={'Email'} Value={userData?.email} />
+        <CustomGrid Key={'Username'} Value={userData?.username} />
 
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
           <TextField
@@ -162,7 +196,15 @@ export default function ProfilePage() {
             Update
           </Button>
         </Box>
-        <DevTool control={control} />
+        {/* <DevTool control={control} /> */}
+        {openCustomAlert && (
+          <CustomAlert
+            open={openCustomAlert}
+            setOpenCustomAlert={setOpenCustomAlert}
+            onAgree={onUpdateUser}
+            message={'Are you sure? '}
+          />
+        )}
       </Box>
     </Container>
   );

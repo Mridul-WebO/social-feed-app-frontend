@@ -22,13 +22,14 @@ export default function Post({
   title = '',
   createdAt = '',
   post_id = '',
+  postRef,
 }) {
   const [postLiked, setPostLiked] = useState(false);
 
   const { data } = useFetchPostImgQuery(post_id);
 
   return (
-    <Card sx={{ width: '350px', my: 3 }}>
+    <Card sx={{ width: '350px', my: 3 }} ref={postRef}>
       <CardHeader
         // avatar={
         //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -43,8 +44,13 @@ export default function Post({
         title={title}
         subheader={createdAt.split('T')[0]}
       />
-      <CardMedia component="img" height="194" image={`data:image/png;base64, ${data?.data}`} alt="Paella dish" />
-     
+      <CardMedia
+        component="img"
+        height="194"
+        image={`data:image/png;base64, ${data?.data}`}
+        alt="Paella dish"
+      />
+
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {desc}

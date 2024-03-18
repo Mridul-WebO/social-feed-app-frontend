@@ -57,7 +57,7 @@ export default function CustomDialog({
       image: postImage,
       isPrivate: false,
     };
-    // console.log({ body });
+
     const res = await createPost(body);
 
     setNewPosts(res?.data?.data);
@@ -66,7 +66,6 @@ export default function CustomDialog({
 
     handleRemoveImage();
     reset();
-
   };
 
   return (

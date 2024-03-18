@@ -4,6 +4,8 @@ import { enqueueSnackbar } from 'notistack';
 
 export const Posts = createContext();
 
+// Kahin use nhi kiya
+
 // eslint-disable-next-line react/prop-types
 const PostsContext = ({ children }) => {
   const { data } = useFetchAllPostsQuery();

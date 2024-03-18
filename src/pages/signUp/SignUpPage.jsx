@@ -93,7 +93,21 @@ export default function SignUpPage() {
             autoFocus
             error={!!errors.firstname?.message}
             helperText={errors.firstname?.message}
-            {...register('firstname', { required: 'First Name is required' })}
+            {...register('firstname', {
+              required: 'First Name is required',
+              minLength: {
+                value: 2,
+                message: 'Firstname must be at least 2 characters',
+              },
+              maxLength: {
+                value: 15,
+                message: 'Firstname must be at most 15 characters',
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: 'Firstname must contain only alphanumeric characters.',
+              },
+            })}
           />
           <TextField
             margin="dense"
@@ -106,10 +120,24 @@ export default function SignUpPage() {
             name="lastname"
             autoComplete="lastname"
             type="text"
-            autoFocus
             error={!!errors.lastname?.message}
             helperText={errors.lastname?.message}
-            {...register('lastname', { required: 'Last Name is required' })}
+            {...register('lastname', {
+              required: 'Last Name is required,',
+
+              minLength: {
+                value: 2,
+                message: 'Last Name must be at least 2 characters',
+              },
+              maxLength: {
+                value: 15,
+                message: 'Last name must be at most 15 characters',
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: 'Last name must contain only alphanumeric characters.',
+              },
+            })}
           />
           <TextField
             margin="dense"
@@ -145,7 +173,21 @@ export default function SignUpPage() {
             autoComplete="username"
             error={!!errors.username?.message}
             helperText={errors.username?.message}
-            {...register('username', { required: 'Username is required' })}
+            {...register('username', {
+              required: 'Username is required',
+              minLength: {
+                value: 6,
+                message: 'Username is too short - should be 6 chars minimum',
+              },
+              maxLength: {
+                value: 30,
+                message: 'Username is too long - should be 30 chars maximum',
+              },
+              pattern: {
+                value: /^[a-z][a-z0-9_]*$/,
+                message: 'Username must contain only alphanumeric characters',
+              },
+            })}
           />
           <TextField
             margin="dense"
@@ -162,11 +204,14 @@ export default function SignUpPage() {
             helperText={errors.password?.message}
             {...register('password', {
               required: 'Password is required',
-              // pattern: {
-              //   value: regex.password,
-              //   message:
-              //     "password must contains 'One UpperCase letter, One lowerCase letter and should be of atleast 8 characters'",
-              // },
+              minLength: {
+                value: 8,
+                message: 'The password must be at least 8 characters',
+              },
+              maxLength: {
+                value: 15,
+                message: 'The password can be at most 15 characters',
+              },
             })}
             InputProps={{
               endAdornment: (

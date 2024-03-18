@@ -9,8 +9,7 @@ const extendedApi = createApiInstance.injectEndpoints({
           method: 'GET',
         };
       },
-      providesTags:['Post']
-   
+      providesTags: ['Post'],
     }),
     createPost: builder.mutation({
       query: (data) => {
@@ -26,7 +25,6 @@ const extendedApi = createApiInstance.injectEndpoints({
           body: formData,
         };
       },
-   
     }),
     fetchPostImg: builder.query({
       query: (postId) => {
@@ -35,7 +33,6 @@ const extendedApi = createApiInstance.injectEndpoints({
           method: 'GET',
         };
       },
-  
     }),
   }),
 });
