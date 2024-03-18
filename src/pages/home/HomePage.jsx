@@ -50,7 +50,6 @@ const HomePage = () => {
 
   const handleCallBack = (entries) => {
     setIsLastPostVisible(entries[0].isIntersecting);
-    console.log(postRef.current);
 
     // console.log(entries[0]);
 
@@ -62,9 +61,13 @@ const HomePage = () => {
       threshold: 1,
     });
     if (postRef.current) observer.observe(postRef.current);
+
+    return () => {};
   });
 
   const fetchMorePost = () => {};
+
+  window.onscroll = () => {};
 
   return (
     <>
