@@ -41,7 +41,7 @@ export default function SignInPage() {
 
         enqueueSnackbar('Logged In successfully', {
           variant: 'success',
-          autoHideDuration: 2000,
+          autoHideDuration: 1000,
         });
       } else {
         enqueueSnackbar(res.error.data.message, {
@@ -142,10 +142,12 @@ export default function SignInPage() {
           <Button
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, gap: 2 }}
             type="submit"
           >
-            {isLoading && <CircularProgress color="inherit" size={20} />}
+            {isLoading && (
+              <CircularProgress color="inherit" size={20} sx={{ ml: -2 }} />
+            )}
             Sign In
           </Button>
           <Grid container>

@@ -3,15 +3,13 @@ import { Navigate } from 'react-router-dom';
 import { Auth } from '../context/AuthContext';
 
 // eslint-disable-next-line react/prop-types
-function Protected({ children }) {
+function NonAuthRoutes({ children }) {
   const { isLoggedIn } = useContext(Auth);
- 
 
-  if (!isLoggedIn) {
-    return <Navigate to="/" />;
+  if (isLoggedIn) {
+    return <Navigate to="/feed" />;
   }
-
   return children;
 }
 
-export default Protected;
+export default NonAuthRoutes;

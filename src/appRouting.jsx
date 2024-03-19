@@ -12,12 +12,13 @@ import HomePage from './pages/home/HomePage';
 // import Context from './context/AuthContext';
 import ProfilePage from './pages/profile/ProfilePage';
 // import Authenticate from './components/Authenticate';
-import Protected from './components/Protected';
+// import Protected from './components/Protected';
 import Authenticate from './components/Authenticate';
 // import PostsContext from './context/PostsContext';
 import Layout from './layouts/Layout';
 import { useContext } from 'react';
 import { Auth } from './context/AuthContext';
+import NonAuthRoutes from './components/NonAuthRoutes';
 
 // import Authenticate from './components/Authenticate';
 
@@ -35,39 +36,36 @@ const appRouting = createBrowserRouter([
     children: [
       {
         index: true,
-
         element: (
-          <Authenticate>
-            <SignInPage />
-          </Authenticate>
+          <NonAuthRoutes>
+            <SignInPage />,
+          </NonAuthRoutes>
         ),
       },
       {
         path: 'sign-up',
         element: (
-          <Authenticate>
-            <SignUpPage />
-          </Authenticate>
+          <NonAuthRoutes>
+            <SignUpPage />,
+          </NonAuthRoutes>
         ),
       },
       {
-        path: 'feed',
-        element: (
-          <Protected>
-            <HomePage />
-          </Protected>
-        ),
-      },
-      {
-        path: 'profile',
-        element: (
-          <Protected>
-            <ProfilePage />
-          </Protected>
-        ),
+        element: <Authenticate />,
+        children: [
+          {
+            path: 'feed',
+            element: <HomePage />,
+          },
+          {
+            path: 'profile',
+            element: <ProfilePage />,
+          },
+        ],
       },
     ],
   },
+
   {
     path: '*',
     element: <DefaultNavigate />,

@@ -165,7 +165,7 @@ export default function CustomAppBar() {
               }}
               to="/feed"
             >
-              Home
+              Feed
             </Link>
           </Typography>
 

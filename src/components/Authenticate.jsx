@@ -1,17 +1,17 @@
 import { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { Auth } from '../context/AuthContext';
 
 // eslint-disable-next-line react/prop-types
-function Authenticate({ children }) {
+function Authenticate() {
   const { isLoggedIn } = useContext(Auth);
 
-  if (isLoggedIn) {
+  if (!isLoggedIn) {
     console.log('Authenticated');
-    return <Navigate to="/feed" />;
+    return <Navigate to="/" />;
   }
 
-  return children;
+  return <Outlet />;
 }
 
 export default Authenticate;

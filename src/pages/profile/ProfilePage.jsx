@@ -26,16 +26,11 @@ import CustomAlert from '../../components/CustomAlert';
 
 const CustomGrid = ({ Key, Value }) => {
   return (
-    <Grid
-      container
-      spacing={0}
-      sx={{ my: 2 }}
-      style={{ border: '2px solid red' }}
-    >
-      <Grid item xs={6}>
+    <Grid container spacing={0} sx={{ my: 2 }}>
+      <Grid item xs={6} sx={{ textAlign: 'center' }}>
         <Typography>{Key}:</Typography>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} sx={{ textAlign: 'start' }}>
         <Typography>{Value}</Typography>
       </Grid>
     </Grid>
@@ -76,7 +71,6 @@ export default function ProfilePage() {
       isPrivate: true,
     };
 
-    console.log('hell');
     setOpenCustomAlert(true);
     setUpdatedData(body);
   };
@@ -107,10 +101,10 @@ export default function ProfilePage() {
         <Typography component="h1" variant="h5">
           Profile
         </Typography>
-        <CustomGrid Key={'First Name'} Value={userData?.firstname} />
+        {/* <CustomGrid Key={'First Name'} Value={userData?.firstname} />
         <CustomGrid Key={'Last Name'} Value={userData?.lastname} />
         <CustomGrid Key={'Email'} Value={userData?.email} />
-        <CustomGrid Key={'Username'} Value={userData?.username} />
+        <CustomGrid Key={'Username'} Value={userData?.username} /> */}
 
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
           <TextField

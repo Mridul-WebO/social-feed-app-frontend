@@ -6,13 +6,16 @@ import { Box, Container } from '@mui/material';
 
 const Layout = () => {
   const { isLoggedIn } = useContext(Auth);
+
   return (
-    <Container>
-      <Box>{isLoggedIn && <CustomAppBar />}</Box>
-      <Box sx={{ my: 10 }}>
-        <Outlet />
-      </Box>
-    </Container>
+    <>
+      <Container>
+        <Box>{isLoggedIn && <CustomAppBar />}</Box>
+        <Box sx={{ my: 10 }}>
+          <Outlet />
+        </Box>
+      </Container>
+    </>
   );
 };
 

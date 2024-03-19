@@ -25,6 +25,7 @@ const extendedApi = createApiInstance.injectEndpoints({
           body: formData,
         };
       },
+      invalidatesTags: ['Post'],
     }),
     fetchPostImg: builder.query({
       query: (postId) => {
@@ -33,6 +34,7 @@ const extendedApi = createApiInstance.injectEndpoints({
           method: 'GET',
         };
       },
+      invalidatesTags: ['Post'],
     }),
   }),
 });

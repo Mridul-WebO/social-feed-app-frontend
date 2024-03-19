@@ -5,23 +5,18 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-import Slide from '@mui/material/Slide';
-import { Avatar, Box, Container, TextField } from '@mui/material';
+import { Avatar, Box, Container, DialogTitle, TextField } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useForm } from 'react-hook-form';
 import { useCreatePostMutation } from '../store/apis/postApi';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function CustomDialog({
   openPostModal,
   setOpenPostModal,
   setNewPosts,
 }) {
-  const { register, handleSubmit, formState, reset } = useForm();
+  const { register, handleSubmit, formState, reset, clearErrors } = useForm();
 
   // const { ref: registerRef, ...rest } = register('postImage');
 
@@ -68,14 +63,24 @@ export default function CustomDialog({
     reset();
   };
 
+  const handleClose = () => {
+    setOpenPostModal(false);
+    handleRemoveImage();
+    if (errors) {
+      clearErrors();
+    }
+  };
+
   return (
     <React.Fragment>
       <Dialog
         open={openPostModal}
-        TransitionComponent={Transition}
-        keepMounted
+        onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
+        <DialogTitle sx={{ textAlign: 'center' }} id="alert-dialog-title">
+          {'Create New Post'}
+        </DialogTitle>
         <DialogContent>
           <Container component="main" maxWidth="xs">
             <Box
@@ -87,7 +92,15 @@ export default function CustomDialog({
             >
               <Avatar
                 style={{ cursor: 'pointer' }}
-                sx={{ mx: 25, width: 250, height: 100, borderRadius: 3 }}
+                sx={{
+                  mx: 25,
+                  width: 250,
+                  height: 150,
+                  borderRadius: 3,
+                  border: '2px dotted gray',
+
+                  backgroundColor: 'lightgray',
+                }}
                 alt=" Sharp"
                 src={previewPostImage}
               >
@@ -107,12 +120,14 @@ export default function CustomDialog({
               )}
 
               <Box
+                id="Post-form"
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
                 sx={{ mt: 1 }}
               >
                 <TextField
+                  size="small"
                   margin="normal"
                   required
                   fullWidth
@@ -126,6 +141,7 @@ export default function CustomDialog({
                   helperText={errors.title?.message}
                 />
                 <TextField
+                  size="small"
                   margin="normal"
                   required
                   fullWidth
@@ -153,20 +169,23 @@ export default function CustomDialog({
                   style={{ display: 'none' }}
                 />
 
-                <Button
+                {/* <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
                   Create Post{' '}
-                </Button>
+                </Button> */}
               </Box>
             </Box>
           </Container>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenPostModal(false)}>Close</Button>
+          <Button onClick={handleClose}>Close</Button>
+          <Button type="submit" id="Post-form" onClick={handleSubmit(onSubmit)}>
+            Create
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
