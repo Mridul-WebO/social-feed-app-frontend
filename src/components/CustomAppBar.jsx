@@ -72,6 +72,7 @@ export default function CustomAppBar() {
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
+      sx={{ mt: 4 }}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'top',
@@ -95,6 +96,7 @@ export default function CustomAppBar() {
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
+      sx={{ mt: 4 }}
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: 'top',
@@ -117,7 +119,17 @@ export default function CustomAppBar() {
           navigate('/feed');
         }}
       >
-        Home
+        Feed
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          setAnchorEl(null);
+          handleMobileMenuClose();
+          navigate('/feed');
+        }}
+      >
+        Liked Posts
       </MenuItem>
       <MenuItem onClick={handleProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogoutPermission}>Logout</MenuItem>
@@ -146,6 +158,7 @@ export default function CustomAppBar() {
             <Link
               style={{ textDecoration: 'none', color: 'inherit' }}
               to="/feed"
+              onClick={() => (document.documentElement.scrollTop = 0)}
             >
               Rituals
             </Link>
@@ -166,6 +179,25 @@ export default function CustomAppBar() {
               to="/feed"
             >
               Feed
+            </Link>
+          </Typography>
+
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ display: { xs: 'none', sm: 'block' } }}
+          >
+            <Link
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+                fontWeight: 100,
+                fontSize: 15,
+              }}
+              to="/liked-posts"
+            >
+              Liked Posts
             </Link>
           </Typography>
 

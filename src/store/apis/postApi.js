@@ -41,6 +41,7 @@ const extendedApi = createApiInstance.injectEndpoints({
 
 export const {
   useFetchAllPostsQuery,
+  useLazyFetchAllPostsQuery,
   useCreatePostMutation,
   useFetchPostImgQuery,
 } = extendedApi;

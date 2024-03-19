@@ -19,6 +19,7 @@ import Layout from './layouts/Layout';
 import { useContext } from 'react';
 import { Auth } from './context/AuthContext';
 import NonAuthRoutes from './components/NonAuthRoutes';
+import LikedPostPage from './pages/likedPosts/LikedPostPage';
 
 // import Authenticate from './components/Authenticate';
 
@@ -60,6 +61,10 @@ const appRouting = createBrowserRouter([
           {
             path: 'profile',
             element: <ProfilePage />,
+          },
+          {
+            path: 'liked-posts',
+            element: <LikedPostPage />,
           },
         ],
       },

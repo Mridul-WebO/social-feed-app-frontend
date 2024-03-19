@@ -12,10 +12,13 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useFetchPostImgQuery } from '../store/apis/postApi';
 
+import noImage from '../../src/assets/images/noImage.jpg';
+import { LikedPosts } from '../context/LikedPostContext';
 // eslint-disable-next-line react/prop-types
+
 export default function Post({
   // eslint-disable-next-line react/prop-types
   desc = '',
@@ -23,13 +26,16 @@ export default function Post({
   createdAt = '',
   post_id = '',
   postRef,
+  post,
+  liked = false,
 }) {
+  const { setLikedPosts } = useContext(LikedPosts);
   const [postLiked, setPostLiked] = useState(false);
 
-  const { data } = useFetchPostImgQuery(post_id);
+  const { data } = useFetchPostImgQuery(post_id, { skip: !post_id });
 
   return (
-    <Card sx={{ width: '350px', my: 3 }} ref={postRef}>
+    <Card sx={{ width: '300px', my: 3 }} ref={postRef}>
       <CardHeader
         // avatar={
         //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -47,8 +53,9 @@ export default function Post({
       <CardMedia
         component="img"
         height="194"
-        image={`data:image/png;base64, ${data?.data}`}
+        image={data?.data ? `data:image/png;base64, ${data?.data}` : noImage}
         alt="Paella dish"
+        sx={{ objectFit: 'fill' }}
       />
 
       <CardContent>
@@ -59,12 +66,24 @@ export default function Post({
       <CardActions disableSpacing>
         <IconButton
           aria-label="add to favorites"
-          onClick={() => setPostLiked((prev) => !prev)}
+          disabled={liked}
+          onClick={() => {
+            setPostLiked((prev) => !prev);
+            setLikedPosts((prev) => [post, ...prev]);
+          }}
         >
-          {postLiked ? (
-            <FavoriteIcon style={{ color: 'red' }} />
+          {liked ? (
+            <>
+              <FavoriteIcon style={{ color: 'red' }} />
+            </>
           ) : (
-            <FavoriteIcon />
+            <>
+              {postLiked ? (
+                <FavoriteIcon style={{ color: 'red' }} />
+              ) : (
+                <FavoriteIcon />
+              )}
+            </>
           )}
         </IconButton>
         <IconButton aria-label="share">

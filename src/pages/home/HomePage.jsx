@@ -1,28 +1,14 @@
-import {
-  Button,
-  CircularProgress,
-  Container,
-  Grid,
-  Typography,
-} from '@mui/material';
+import { Button, Container, Grid, Typography } from '@mui/material';
 import Post from '../../components/Post';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import CustomDialog from '../../components/CustomDialog';
-// import { Posts } from '../../context/PostsContext';
-import { useFetchAllPostsQuery } from '../../store/apis/postApi';
+
+import {
+  useFetchAllPostsQuery,
+  useLazyFetchAllPostsQuery,
+} from '../../store/apis/postApi';
 import { enqueueSnackbar } from 'notistack';
 import { Link } from 'react-router-dom';
-
-// import config from '../../../config';
-// import { getSessionToken } from '../../utils/helperFunctions';
-
-export const CustomLoader = () => {
-  return (
-    <Container sx={{ textAlign: 'center', height: '60px' }}>
-      <CircularProgress />
-    </Container>
-  );
-};
 
 const HomePage = () => {
   const postRef = useRef(null);
@@ -34,14 +20,23 @@ const HomePage = () => {
   const [postsCount, setPostsCount] = useState(0);
   const postPerPage = 5;
 
-  const { data } = useFetchAllPostsQuery(pageNumber);
+  const { data, isLoading, isError, error, isSuccess } =
+    useFetchAllPostsQuery(1);
+
+  const [refetchData] = useLazyFetchAllPostsQuery();
 
   useEffect(() => {
-    if (data?.data?.data) {
-      setPosts((prev) => [...prev, ...data.data.data]);
+    if (isError) {
+      console.log({ error });
+    }
+  }, [error, isError]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setPosts(data.data.data);
       setPostsCount(data.data.total);
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
   const setNewPosts = (post) => {
     setPosts([post, ...posts]);
@@ -56,7 +51,12 @@ const HomePage = () => {
     setOpenPostModal(true);
   };
 
-  const fetchMorePost = () => {
+  const fetchMorePost = async () => {
+    const res = await refetchData(pageNumber + 1);
+    const fetchedData = res?.data?.data?.data;
+    console.log({ fetchedData });
+    setPosts((prev) => [...prev, ...fetchedData]);
+
     if (parseInt(postsCount / postPerPage) === pageNumber) {
       setHasMorePosts(false);
     } else {
@@ -64,22 +64,22 @@ const HomePage = () => {
     }
   };
 
-  useEffect(() => {
-    const callBack = () => {
-      const lastCardPosition = postRef?.current?.getBoundingClientRect();
-      if (
-        lastCardPosition?.top + lastCardPosition?.height <
-        window.innerHeight
-      ) {
-        window.removeEventListener('scroll', callBack);
-      }
-    };
-    window.addEventListener('scroll', callBack);
+  // useEffect(() => {
+  //   const callBack = () => {
+  //     const lastCardPosition = postRef?.current?.getBoundingClientRect();
+  //     if (
+  //       lastCardPosition?.top + lastCardPosition?.height <
+  //       window.innerHeight
+  //     ) {
+  //       window.removeEventListener('scroll', callBack);
+  //     }
+  //   };
+  //   window.addEventListener('scroll', callBack);
 
-    return () => {
-      window.removeEventListener('scroll', callBack);
-    };
-  }, [data?.data?.data]);
+  //   return () => {
+  //     window.removeEventListener('scroll', callBack);
+  //   };
+  // }, [data?.data?.data]);
 
   return (
     <>
@@ -108,10 +108,11 @@ const HomePage = () => {
               <Post
                 postRef={postRef}
                 key={post?._id}
-                post_id={post?._id}
+                post_id={post.filePath ? post?._id : undefined}
                 desc={post?.description}
                 title={post?.title}
                 createdAt={post?.createdAt}
+                post={post}
               />
             );
           })}
