@@ -1,10 +1,11 @@
-import { Button, CircularProgress, Container, Grid } from '@mui/material';
+import { Button, CircularProgress, Container, Grid, Typography } from '@mui/material';
 import Post from '../../components/Post';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import CustomDialog from '../../components/CustomDialog';
 // import { Posts } from '../../context/PostsContext';
 import { useFetchAllPostsQuery } from '../../store/apis/postApi';
 import { enqueueSnackbar } from 'notistack';
+
 
 // import config from '../../../config';
 // import { getSessionToken } from '../../utils/helperFunctions';
@@ -24,16 +25,23 @@ const HomePage = () => {
   const [openPostModal, setOpenPostModal] = useState(false);
   const [isLastPostVisible, setIsLastPostVisible] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [postsCount, setPostsCount] = useState(0);
 
-  const { data } = useFetchAllPostsQuery(pageNumber, {
+
+
+  const { data,  isFetching } = useFetchAllPostsQuery(pageNumber, {
     refetchOnMountOrArgChange: true,
   });
 
   useEffect(() => {
     if (data?.data?.data) {
       setPosts((prev) => [...prev, ...data.data.data]);
+     setPostsCount(data.data.total)
+      
     }
   }, [data]);
+
+
 
   const setNewPosts = (post) => {
     setPosts([post, ...posts]);
@@ -48,30 +56,51 @@ const HomePage = () => {
     setOpenPostModal(true);
   };
 
-  const handleCallBack = (entries) => {
-    setIsLastPostVisible(entries[0].isIntersecting);
+ 
 
-    // console.log(entries[0]);
 
-    // setPageNumber(pageNumber + 1);
-  };
+  const fetchMorePost = () => {
+    
+    console.log(postsCount/5)
+   
+    if(parseInt(postsCount/5) === pageNumber){
+      setIsLastPostVisible(false);
+    } 
+    setPageNumber(prev=>prev+1)
+  }
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(handleCallBack, {
-      threshold: 1,
-    });
-    if (postRef.current) observer.observe(postRef.current);
+  useEffect(()=>{
+    
+    const callBack = ()=>{
+     
+      const lastCardPosition = postRef.current.getBoundingClientRect()
+        if(lastCardPosition.top + lastCardPosition.height <  window.innerHeight){
+          setIsLastPostVisible(true)
+        }
+      }
 
-    return () => {};
-  });
+   window.addEventListener('scroll',callBack)
 
-  const fetchMorePost = () => {};
+   return ()=>{
+    window.removeEventListener('scroll',callBack)
+   }
 
-  window.onscroll = () => {};
+
+  },[data?.total])
+
+
+
+
+
+
+ 
+
+
+
 
   return (
     <>
-      <Container component="main" maxWidth="mx" sx={{ mt: 8 }}>
+      <Container component="main" maxWidth="mx" sx={{ mt: 8 }}   >
         <Grid sx={{ display: 'flex', justifyContent: 'end' }}>
           <Button
             position="fixed"
@@ -103,9 +132,10 @@ const HomePage = () => {
               />
             );
           })}
-          {isLastPostVisible && (
+          {isFetching && <CircularProgress/>}
+          {isLastPostVisible ? (
             <Button onClick={fetchMorePost}>Load More...</Button>
-          )}
+          ):<Typography>You are all caught up...</Typography>}
         </Grid>
       </Container>
 
