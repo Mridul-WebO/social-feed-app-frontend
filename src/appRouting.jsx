@@ -1,27 +1,42 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-// import App from './App';
-// import ErrorPage from './pages/errorPage/ErrorPage';
+
 import SignInPage from './pages/signIn/SignInPage';
 import SignUpPage from './pages/signUp/SignUpPage';
-// import ProtectedRoute from "./components/ProtectedRoute";
-// import Authenticate from "./components/Authenticate";
-// import { SnackbarProvider } from 'notistack';
-import HomePage from './pages/home/HomePage';
-// import { Provider } from 'react-redux';
-// import { store } from './store/store';
-// import Context from './context/AuthContext';
-import ProfilePage from './pages/profile/ProfilePage';
-// import Authenticate from './components/Authenticate';
-// import Protected from './components/Protected';
-import Authenticate from './components/Authenticate';
-// import PostsContext from './context/PostsContext';
-import Layout from './layouts/Layout';
-import { useContext } from 'react';
-import { Auth } from './context/AuthContext';
-import NonAuthRoutes from './components/NonAuthRoutes';
-import LikedPostPage from './pages/likedPosts/LikedPostPage';
 
-// import Authenticate from './components/Authenticate';
+import HomePage from './pages/home/HomePage';
+
+import ProfilePage from './pages/profile/ProfilePage';
+
+import Layout from './layouts/Layout';
+import { Suspense, useContext } from 'react';
+import { Auth, AuthRedirect } from './context/AuthContext';
+
+import LikedPostPage from './pages/likedPosts/LikedPostPage';
+import { Box, CircularProgress } from '@mui/material';
+
+// eslint-disable-next-line react-refresh/only-export-components
+
+const getRouteWrapper = (component, authRoute = true) => {
+  return (
+    <AuthRedirect authenticatedRoute={authRoute}>
+      <Suspense
+        fallback={
+          <Box
+            width="100%"
+            height="100vh"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Box>
+        }
+      >
+        {component}
+      </Suspense>
+    </AuthRedirect>
+  );
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
 const DefaultNavigate = () => {
@@ -37,36 +52,23 @@ const appRouting = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <NonAuthRoutes>
-            <SignInPage />,
-          </NonAuthRoutes>
-        ),
+        element: getRouteWrapper(<SignInPage />, false),
       },
       {
         path: 'sign-up',
-        element: (
-          <NonAuthRoutes>
-            <SignUpPage />,
-          </NonAuthRoutes>
-        ),
+        element: getRouteWrapper(<SignUpPage />, false),
       },
       {
-        element: <Authenticate />,
-        children: [
-          {
-            path: 'feed',
-            element: <HomePage />,
-          },
-          {
-            path: 'profile',
-            element: <ProfilePage />,
-          },
-          {
-            path: 'liked-posts',
-            element: <LikedPostPage />,
-          },
-        ],
+        path: 'feed',
+        element: getRouteWrapper(<HomePage />, true),
+      },
+      {
+        path: 'profile',
+        element: getRouteWrapper(<ProfilePage />, true),
+      },
+      {
+        path: 'liked-posts',
+        element: getRouteWrapper(<LikedPostPage />, true),
       },
     ],
   },

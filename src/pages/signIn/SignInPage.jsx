@@ -55,14 +55,6 @@ export default function SignInPage() {
         autoHideDuration: 5000,
       });
     }
-
-    // navigate("/feed",{replace:true});
-    // console.log({ result });
-
-    // enqueueSnackbar('Registered user successfully! Please Sign In', {
-    //   variant: 'success',
-    //   autoHideDuration: 2000,
-    // });
   };
 
   return (

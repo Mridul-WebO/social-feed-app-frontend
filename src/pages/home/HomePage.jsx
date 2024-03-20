@@ -1,6 +1,6 @@
 import { Button, Container, Grid, Typography } from '@mui/material';
 import Post from '../../components/Post';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CustomDialog from '../../components/CustomDialog';
 
 import {
@@ -9,6 +9,7 @@ import {
 } from '../../store/apis/postApi';
 import { enqueueSnackbar } from 'notistack';
 import { Link } from 'react-router-dom';
+import { CustomLoader } from '../../components/CustomLoader';
 
 const HomePage = () => {
   const postRef = useRef(null);
@@ -27,7 +28,10 @@ const HomePage = () => {
 
   useEffect(() => {
     if (isError) {
-      console.log({ error });
+      enqueueSnackbar("Couldn't update your feed.", {
+        variant: 'error',
+        autoHideDuration: 2000,
+      });
     }
   }, [error, isError]);
 
@@ -54,7 +58,7 @@ const HomePage = () => {
   const fetchMorePost = async () => {
     const res = await refetchData(pageNumber + 1);
     const fetchedData = res?.data?.data?.data;
-    console.log({ fetchedData });
+
     setPosts((prev) => [...prev, ...fetchedData]);
 
     if (parseInt(postsCount / postPerPage) === pageNumber) {
@@ -101,7 +105,8 @@ const HomePage = () => {
             alignItems: 'center',
           }}
         >
-          {posts?.length === 0 && <h3>No posts found</h3>}
+          {isLoading && <CustomLoader />}
+          {posts?.length === 0 && !isLoading && <h3>No posts found</h3>}
 
           {posts?.map((post) => {
             return (
@@ -116,16 +121,21 @@ const HomePage = () => {
               />
             );
           })}
-
-          {hasMorePosts ? (
-            <Button onClick={fetchMorePost}>Load More...</Button>
-          ) : (
-            <Typography>
-              You are all caught up...
-              <Link onClick={() => (document.documentElement.scrollTop = 0)}>
-                Back To Top
-              </Link>
-            </Typography>
+          {!isLoading && (
+            <>
+              {hasMorePosts ? (
+                <Button onClick={fetchMorePost}>Load More...</Button>
+              ) : (
+                <Typography>
+                  You are all caught up...
+                  <Link
+                    onClick={() => (document.documentElement.scrollTop = 0)}
+                  >
+                    Back To Top
+                  </Link>
+                </Typography>
+              )}
+            </>
           )}
         </Grid>
       </Container>

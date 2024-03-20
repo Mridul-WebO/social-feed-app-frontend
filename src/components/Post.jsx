@@ -31,24 +31,26 @@ export default function Post({
 }) {
   const { setLikedPosts } = useContext(LikedPosts);
   const [postLiked, setPostLiked] = useState(false);
+  const getMonth = new Date(createdAt).toLocaleString('default', {
+    month: 'long',
+  });
+
+  const date = createdAt.split('T')[0].split('-');
+  const postCreatedAt = date[2] + ' ' + getMonth + ' ' + date[0];
 
   const { data } = useFetchPostImgQuery(post_id, { skip: !post_id });
 
   return (
     <Card sx={{ width: '300px', my: 3 }} ref={postRef}>
       <CardHeader
-        // avatar={
-        //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-        //     R
-        //   </Avatar>
-        // }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
+        subheaderTypographyProps={{ fontSize: 10 }}
         title={title}
-        subheader={createdAt.split('T')[0]}
+        subheader={postCreatedAt}
       />
       <CardMedia
         component="img"

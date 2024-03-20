@@ -1,5 +1,7 @@
-import { createContext, useState } from 'react';
+/* eslint-disable react/prop-types */
+import { createContext, useContext, useState } from 'react';
 import { deleteCookie, setCookie } from '../utils/helperFunctions';
+import { Navigate } from 'react-router-dom';
 
 export const Auth = createContext();
 
@@ -31,3 +33,15 @@ const Context = ({ children }) => {
 };
 
 export default Context;
+
+export function AuthRedirect({ children, authenticatedRoute = true }) {
+  const auth = useContext(Auth);
+
+  if (!auth?.isLoggedIn && authenticatedRoute) {
+    return <Navigate to="/" />;
+  } else if (auth?.isLoggedIn && !authenticatedRoute) {
+    return <Navigate to="/feed" />;
+  }
+
+  return children;
+}

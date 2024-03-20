@@ -126,7 +126,7 @@ export default function CustomAppBar() {
           setAnchorEl(null);
           setAnchorEl(null);
           handleMobileMenuClose();
-          navigate('/feed');
+          navigate('/liked-posts');
         }}
       >
         Liked Posts
@@ -167,7 +167,7 @@ export default function CustomAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' }, mx: 4 }}
+            sx={{ display: { sm: 'none', md: 'block' }, mx: 4 }}
           >
             <Link
               style={{
@@ -186,7 +186,7 @@ export default function CustomAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ display: { sm: 'none', md: 'block' } }}
           >
             <Link
               style={{

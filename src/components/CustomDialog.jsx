@@ -5,11 +5,19 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-import { Avatar, Box, Container, DialogTitle, TextField } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Container,
+  DialogTitle,
+  IconButton,
+  TextField,
+} from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useForm } from 'react-hook-form';
 import { useCreatePostMutation } from '../store/apis/postApi';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function CustomDialog({
   openPostModal,
@@ -78,9 +86,21 @@ export default function CustomDialog({
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle sx={{ textAlign: 'center' }} id="alert-dialog-title">
+        <DialogTitle sx={{ ml: 3 }} id="alert-dialog-title">
           {'Create New Post'}
         </DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           <Container component="main" maxWidth="xs">
             <Box
@@ -94,8 +114,8 @@ export default function CustomDialog({
                 style={{ cursor: 'pointer' }}
                 sx={{
                   mx: 25,
-                  width: 250,
-                  height: 150,
+                  width: 400,
+                  height: 120,
                   borderRadius: 3,
                   border: '2px dotted gray',
 
@@ -169,23 +189,23 @@ export default function CustomDialog({
                   style={{ display: 'none' }}
                 />
 
-                {/* <Button
+                <Button
                   type="submit"
                   fullWidth
                   variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
+                  sx={{ mt: 1, mb: 1 }}
                 >
                   Create Post{' '}
-                </Button> */}
+                </Button>
               </Box>
             </Box>
           </Container>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-          <Button type="submit" id="Post-form" onClick={handleSubmit(onSubmit)}>
+          {/* <Button type="submit" id="Post-form" onClick={handleSubmit(onSubmit)}>
             Create
-          </Button>
+          </Button> */}
         </DialogActions>
       </Dialog>
     </React.Fragment>
